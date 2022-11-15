@@ -1,0 +1,22 @@
+/* Copyright (C) Navpreet Singh 2022, All Rights Reserved */
+
+body{
+    font-size: 24px;
+    line-height: 1;
+    background: none repeat scroll left top #000000;
+    color: white;
+    background-color: black;
+    font-family: 'Walter Turncoat', ComicFont, cursive, "Comic Sans MS", ComicSans, sans-serif;
+}
+
+.strong-box {
+    background-image: url("../images/strong_box.png");
+    background-size: 100% 100%;
+    height: 100px;
+    width: 100px;
+}
+.width {
+    width:100px;
+    height:100px;
+    position: absolute;
+}

@@ -1,0 +1,15 @@
+/* Copyright (C) Navpreet Singh 2022, All Rights Reserved */
+
+
+.columns{
+    border: 5px solid white;
+}
+
+main{
+    display: flex;
+    justify-content: space-between;
+}
+
+#object-editor{
+    margin-top: 100px;
+}
