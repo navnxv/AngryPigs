@@ -5,8 +5,6 @@ Navpreet Singh
 
 This project is a level editor for a angry pigs game and lets you add objects to the editor and save data
 
-[demo] (http://dev.pgwm.vfs.local/apps/myApp) | [tutorial] (link)
-
 
 ## Synopsis
 ---------------
