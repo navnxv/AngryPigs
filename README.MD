@@ -42,8 +42,7 @@ The list of saved files can be seen in the load level select column
 # *** Caveats *** (optional)
 ---------------------------------------
 
-editor load
-dragging the created objects
-catapult
+editor load,
+catapult,
 new blocks
 
