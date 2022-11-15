@@ -19,16 +19,24 @@ export default class App{
         $("#save-btn").on("click", event => this.onSave(event));
         $("#load-btn").on("click", event => this.loadData(event));
 
-
         this.initDraggables();
         this.initDropzone();
         this.getLevelNames();
         
+        $(document).on("dragstart", event => {
+            this.draggedObject = {
+                getId : event.target.id,
+                x : event.offsetX,
+                y : event.offsetY,
+            }
+        });
+
+
     }
 
     initDraggables() {
 
-        $("#box-1")
+        $(".box")
             .on("dragstart", event => {
                 //attach my id here to element and transfer it
                 const data = {
@@ -44,34 +52,17 @@ export default class App{
             .on("dropover", event => {
                 event.preventDefault();
             } );
-        
-            $(".placed")
-            .on("dragstart", event => {
-                //attach my id here to element and transfer it
-                const data = {
-                    targetId: event.target.id,
-                    x : event.offsetX,
-                    y : event.offsetY,
-                };
-                console.log(data.x + "," + data.y);
-                const xferData = JSON.stringify(data);
-
-                event.originalEvent.dataTransfer.setData("text", xferData);
-                event.originalEvent.dataTransfer.effectAllowed = "move";
-            })
-            .on("dropover", event => {
-                event.preventDefault();
-
             
 
-
-
-            } );
+            
     }
 
     initDropzone() {
 
-        
+        $(".box").on("dragstart",event =>{
+            //console.log(event);
+        })
+
         $("#edit-window")
             .on("dragover", event => {
                 //prevent the default ghosting issue
@@ -83,28 +74,39 @@ export default class App{
                 if(event.originalEvent.toElement.id != "edit-window"){
                     return;
                 }
-
                 //duplicate the element dropped if it doesn't have the 'isPlaced class
                 const xferData = event.originalEvent.dataTransfer.getData("text");
                 
                 if(xferData == ""){
+                    //console.log(event.currentTarget.lastChild.id);
+                    
+                    console.log(this.getId);
+                    $("#"+this.draggedObject.getId).css("top",event.offsetY - this.draggedObject.y);
+                    $("#"+this.draggedObject.getId).css("left",event.offsetX - this.draggedObject.x);
                     return;
                 }
 
                 const data = JSON.parse(xferData);
                 //const gameObjectSrc = $(`#${data.targetId}`).clone(true);
                 
-                
-                const newBox = $(`#${data.targetId}`).clone(true);
+                let newBox = $(`#${data.targetId}`).clone(true);
 
+                let classList = newBox.attr("class");
+                let classesArr = classList.split(/\s+/);
 
+                newBox = $("<div draggable='true'></div>");
+                $.each(classesArr, function(index, value){
+                    newBox.addClass(value);
+                })
                 newBox.css("top",event.offsetY - data.y);
                 newBox.css("left",event.offsetX - data.x);
                 newBox.addClass("placed");
                 newBox[0].id = "box-" + this.uniqueID;
                 this.uniqueID++;
                 
-                $("#edit-window").append( newBox.clone(false) );
+              
+
+                $("#edit-window").append( newBox );
             });
     }
 
