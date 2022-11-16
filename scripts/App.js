@@ -59,10 +59,6 @@ export default class App{
 
     initDropzone() {
 
-        $(".box").on("dragstart",event =>{
-            //console.log(event);
-        })
-
         $("#edit-window")
             .on("dragover", event => {
                 //prevent the default ghosting issue
@@ -74,7 +70,6 @@ export default class App{
                 if(event.originalEvent.toElement.id != "edit-window"){
                     return;
                 }
-                //duplicate the element dropped if it doesn't have the 'isPlaced class
                 const xferData = event.originalEvent.dataTransfer.getData("text");
                 
                 if(xferData == ""){
@@ -91,6 +86,7 @@ export default class App{
                 
                 let newBox = $(`#${data.targetId}`).clone(true);
 
+                console.log(newBox);
                 let classList = newBox.attr("class");
                 let classesArr = classList.split(/\s+/);
 
