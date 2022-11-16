@@ -86,7 +86,7 @@ export default class App{
                 
                 let newBox = $(`#${data.targetId}`).clone(true);
 
-                console.log(newBox);
+                //console.log(newBox);
                 let classList = newBox.attr("class");
                 let classesArr = classList.split(/\s+/);
 
@@ -97,7 +97,14 @@ export default class App{
                 newBox.css("top",event.offsetY - data.y);
                 newBox.css("left",event.offsetX - data.x);
                 newBox.addClass("placed");
-                newBox[0].id = "box-" + this.uniqueID;
+                
+                if(classesArr[1] == "bird"){
+                    newBox[0].id = "bird-" + this.uniqueID;
+                }
+                else if(classesArr[1] == "strong-box"){
+                    newBox[0].id = "box-" + this.uniqueID;
+
+                }
                 this.uniqueID++;
                 
               
@@ -111,8 +118,7 @@ export default class App{
         event.preventDefault();
 
         this.editor$ = $("#edit-window");
-
-        this.saveData(this.editor$);
+        let level = new LevelController(this.editor$);
     }
     
     onSubmit( event ) {
@@ -147,14 +153,16 @@ export default class App{
     }
 
     saveData(data){
-        $.post(`/api/save`, data)
-            .then(response =>{
-                //handle the response
-                const respData = JSON.parse(response);
-                if(respData.error)
-                    console.log(`ERROR: ${respData} from the server`);
-                    console.log(respData);
-            });
+        // $.post(`/api/save`, data)
+        //     .then(response =>{
+        //         //handle the response
+        //         console.log(response);
+        //         console.log(data);
+        //         const respData = JSON.parse(response);
+        //         if(respData.error)
+        //             console.log(`ERROR: ${respData} from the server`);
+        //             //console.log(respData);
+        //     });
     }
 
     getLevelNames(){
@@ -167,7 +175,7 @@ export default class App{
                 option.innerHTML = file.name;
                 $("#options").append(option);
             });
-        })
+        });
     }
 
     loadData(event){
