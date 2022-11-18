@@ -10,7 +10,10 @@ export default class LevelController {
         this.scene = new Scene( editor$ );
 
         //Serialize the scene
-        this.data = JSON.stringify(this.scene);
+        console.log(this.scene);
+        this.data = this.scene.serialize();
+        
+        console.log(JSON.parse(this.data));
         this.save();
     }
 
@@ -20,14 +23,15 @@ export default class LevelController {
             $.post(`/api/save`, this.data)
             .then(response =>{
                 //handle the response
-                const respData = this.data;
-                console.log(this.data);
+                const respData = response;
+                console.log(response);
                 if(response.error)
                     console.log(`ERROR: ${respData} from the server`);
-                resolve(JSON.stringify(respData));
+                resolve(respData);
             })
             .catch( error => reject( error ));
             
+
 
         });
                

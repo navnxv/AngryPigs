@@ -3,9 +3,6 @@
 export default class Scene{
     constructor(editor$){
 
-        this.payload = {
-            
-        }
         this.scene = {
             userid:"pg23navpreet",
             name:"nav",
@@ -19,9 +16,10 @@ export default class Scene{
                 oneStar : $( "input[name = 'score-star1']" ).val(),
                 twoStar : $( "input[name = 'score-star2']" ).val(),
                 threeStar : $( "input[name = 'score-star3']" ).val(),
-                entities : this.getEditorElements(editor$),
+                //entities : this.getEditorElements(editor$),
             }
         }
+        console.log($( "input[name = 'name']" ).val());
         //console.log(this.scene);
     }
 
@@ -34,34 +32,34 @@ export default class Scene{
         for(let i = 0; i< children.length; i++){
             if(children[i].classList.contains("strong-box")){
                 collidables.push({
-                    "id" : children[i].id,
-                    "x": children[i].offsetLeft,
-                    "y" : children[i].offsetTop,
-                    "height": children[i].offsetHeight,
-                    "width": children[i].offsetWidth,
-                    "texture": "stone-box",
-                    "bounce": 0,
-                    "mass": 50,
-                    "friction": 1,
-                    "shape": "square"
+                    id : children[i].id,
+                    x: children[i].offsetLeft,
+                    y : children[i].offsetTop,
+                    height: children[i].offsetHeight,
+                    width: children[i].offsetWidth,
+                    texture: "stone-box",
+                    bounce: 0,
+                    mass: 50,
+                    friction: 1,
+                    shape: "square"
                 });
             }
 
             else if(children[i].classList.contains("bird")){
                 targets.push({
-                    "id" : children[i].id,
-                    "wx": children[i].offsetLeft,
-                    "wy" : children[i].offsetTop,
-                    "height": children[i].offsetHeight,
-                    "width": children[i].offsetWidth,
-                    "value": 100,
+                    id : children[i].id,
+                    wx: children[i].offsetLeft,
+                    wy : children[i].offsetTop,
+                    height: children[i].offsetHeight,
+                    width: children[i].offsetWidth,
+                    value: 100,
                 })
             }
         }
 
         const entities = {
-            "collidables": collidables,
-            "targets": targets,
+            collidables: collidables,
+            targets: targets,
         }
 
         return entities;
