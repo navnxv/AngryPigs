@@ -12,8 +12,8 @@ import FileSystem from 'fs-extra'  // supports promses
 const __filename = fileURLToPath( import.meta.url );
 const __dirname = Path.resolve();
 
-import Express from 'express'
-import HTTP from 'http'
+import Express, { response } from 'express'
+import HTTP, { request } from 'http'
 import CORS from 'cors'
 
 //import Payload from '../server/Result'
@@ -62,29 +62,79 @@ class Server {
             response.sendFile(`${Path.join(__dirname, './')}/editor/editor.html`, { title: this.title });
         });
 
-        this.api.post("/api/save", ( request, response ) => {
+        this.api.post(`/api/save`, ( request, response ) => {
             // Pull apart the request, do something here...
-            const params = request.params;
+            
             const body = request.body;
-            const query = request.query;
+            
             const filename = body["name"];
+            
             const data = JSON.stringify(request.body);
 
             console.log("./" + body["type"] + "s/" + filename + ".json");
-            FileSystem.writeFile("./" + body["type"] + "s/" + filename + ".json", data , function(err){
+            FileSystem.writeFile("./" + body["type"] + "s/" + filename + ".json", data , (err) => {
                 if(err){
                     return err;
                 }
             })
 
-            console.log("Recieved some data");
-            response.send( JSON.stringify( data ));
+            
+            response.send( data );
         });
 
+        this.api.post(`/api/saveObj`, (request, response) => {
+            const body = request.body;
+            const data = JSON.stringify(request.body);
+            const filename = body["name"];
+            
 
-        this.api.post('/api/levelList' , (req,res) => {
+            
+            console.log("./" + body["type"] + "s/" + filename + ".json");
+            FileSystem.writeFile("./" + body["type"] + "s/" + filename + ".json", data , (err) => {
+                if(err){
+                    return err;
+                }
+            });
+            response.send( data );
+        })
+
+
+        this.api.post('/api/levelList' , (request,response) => {
             var payload = [];
             FileSystem.readdir("./levels", (err, files) => {  
+                files.forEach(file => {
+                  payload.push({"name":file.slice(0,-5), "filename":file})     
+                });
+                
+                let data = { 
+                    "payload" : payload,
+                    "error": 0
+                }
+                response.send(data);     
+              });   
+        
+               
+        });  
+
+        this.api.post(`/api/load`, (request, response) =>{
+            const filename = request.body["name"];
+            console.log(filename);
+            let data = FileSystem.readFileSync("./" + request.body["type"] + "s/" + filename + ".json");
+
+            
+            response.send({
+                "name" : filename,
+                "payload" : JSON.parse(data),
+                "error" : 0,
+            
+
+            });
+
+        });
+
+        this.api.post(`/api/objectList`, (request,response) => {
+            var payload = [];
+            FileSystem.readdir("./objects", (err, files) => {  
                 files.forEach(file => {
                   payload.push({"name":file.slice(0,-5), "filename":file})     
                 });
@@ -92,11 +142,9 @@ class Server {
                     "payload" : payload,
                     "error": 0
                 }
-                res.send(data);     
+                response.send(data);     
               });   
-        
-               
-        });  
+        })
 
         this.api.set("port", PORT );
         this.listener = HTTP.createServer( this.api );

@@ -19,7 +19,7 @@ export default class Scene{
                 //entities : this.getEditorElements(editor$),
             }
         }
-        console.log($( "input[name = 'name']" ).val());
+        
         //console.log(this.scene);
     }
 

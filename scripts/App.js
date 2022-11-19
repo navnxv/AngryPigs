@@ -2,6 +2,9 @@
 
 import Scene from "./Scene.js"
 import LevelController from "./LevelController.js";
+import ObjectController from "./ObjectController.js";
+
+
 
 export default class App{
 
@@ -18,10 +21,14 @@ export default class App{
         $( "input[name = 'action']" ).on("click", event => this.onSubmit( event ));
         $("#save-btn").on("click", event => this.onSave(event));
         $("#load-btn").on("click", event => this.loadData(event));
+        $("#save-obj-btn").on("click", event => this.onSaveObj(event));
+        $("#load-obj-btn").on("click", event => this.onLoadObj(event));
 
         this.initDraggables();
         this.initDropzone();
         this.getLevelNames();
+        this.getObjectNames();
+
         
         $(document).on("dragstart", event => {
             this.draggedObject = {
@@ -76,8 +83,8 @@ export default class App{
                     //console.log(event.currentTarget.lastChild.id);
                     
                     console.log(this.getId);
-                    $("#"+this.draggedObject.getId).css("top",event.offsetY - this.draggedObject.y);
-                    $("#"+this.draggedObject.getId).css("left",event.offsetX - this.draggedObject.x);
+                    $("#" + this.draggedObject.getId).css("top",event.offsetY - this.draggedObject.y);
+                    $("#" + this.draggedObject.getId).css("left",event.offsetX - this.draggedObject.x);
                     return;
                 }
 
@@ -96,8 +103,10 @@ export default class App{
                 })
                 newBox.css("top",event.offsetY - data.y);
                 newBox.css("left",event.offsetX - data.x);
+                newBox.css("height", $("input[name = 'obj-height']").val());
+                newBox.css("width", $("input[name = 'obj-width']").val());
+
                 newBox.addClass("placed");
-                
                 if(classesArr[1] == "bird"){
                     newBox[0].id = "bird-" + this.uniqueID;
                 }
@@ -106,9 +115,6 @@ export default class App{
 
                 }
                 this.uniqueID++;
-                
-              
-
                 $("#edit-window").append( newBox );
             });
     }
@@ -118,9 +124,65 @@ export default class App{
         event.preventDefault();
 
         this.editor$ = $("#edit-window");
-        let level = new LevelController(this.editor$);
+        this.savingData(this.editor$);
     }
-    
+
+    // Saving objects
+    onSaveObj(event){
+        event.preventDefault();
+        this.savingObject();
+
+        const editedObj =  "." + ($( `#objOptions`).val()).toLowerCase();
+        $(editedObj).css("height", $("input[name = 'obj-height']").val());
+        $(editedObj).css("width", $("input[name = 'obj-width']").val());
+
+        console.log("here");
+        this.resetHeightWidth("#bird");
+        this.resetHeightWidth("#box-1");
+        this.resetHeightWidth("#catapult"); 
+    }
+
+    resetHeightWidth(id){
+        $(id).css("height", 100);
+        $(id).css("width", 100);
+    }
+
+
+    onLoadObj(event){
+        event.preventDefault();
+        const getClass = ($( `#objOptions`).val()).toLowerCase();
+        console.log(getClass);
+
+        console.log($(".box").hasClass(getClass));
+
+        let data = {
+            name : $( `#objOptions`).val(),
+            type: "object"
+        }
+
+        $.post("/api/load", (data))
+        .then(data =>{
+            const newData = data.payload; 
+            
+            $( "input[name = 'obj-value']" ).val(newData.value);
+            $( "input[name = 'obj-height']" ).val(newData.height);
+            $( "input[name = 'obj-width']" ).val(newData.width);
+            $( "input[name = 'obj-texture']" ).val(newData.texture);
+            $( "input[name = 'obj-mass']" ).val(newData.mass);
+            $( "input[name = 'obj-rest']" ).val(newData.restitution);
+            $( "input[name = 'obj-friction']" ).val(newData.friction);
+            $( "input[name = 'obj-shape']" ).val(newData.shape);
+
+            
+
+
+            
+                
+            });
+     
+    }
+
+
     onSubmit( event ) {
         event.preventDefault();
 
@@ -131,24 +193,7 @@ export default class App{
         //Serialize the scene
         const payload = aScene.serialize();
 
-        this.saveData(this.editor$);
-
-        
-        // const my = this.#__private__;
-
-        // let formData = $(event.target).serializeArray();
-        // let formQuery = $(event.target).serialize();
-
-        // let formJSON = JSON.stringify( formData );
-        // $.post(`/api/save?${formQuery}`, formJSON )
-        //     .then( result => {
-        //         // called when the server returns
-        //         let responseData = JSON.parse( result );
-
-        //         my.output$.html('made it here');
-
-        //         my.output$.append( result );
-        //     });
+        //this.saveData(this.editor$);
 
     }
 
@@ -168,8 +213,8 @@ export default class App{
     getLevelNames(){
         $.post("/api/levelList").then(data => {  
             data = data.payload; 
-            console.log("reached");
-            data.forEach(function (file) {
+            
+            data.forEach((file) =>  {
                 var option = document.createElement('option');
                 option.value = file.name; 
                 option.innerHTML = file.name;
@@ -177,6 +222,18 @@ export default class App{
             });
         });
     }
+
+    getObjectNames(){
+        $.post("/api/objectList").then(data => {  
+            data = data.payload; 
+            console.log("reached");
+            data.forEach((file) => {
+                var option = document.createElement('option');
+                option.value = file.name; 
+                option.innerHTML = file.name;
+                $("#objOptions").append(option);
+            });
+        });    }
 
     loadData(event){
         event.preventDefault();
@@ -194,7 +251,24 @@ export default class App{
             .catch( error => {
                 alert(`Level not saved ${error}`);
             });
-             //location.reload(); 
+            
+    }
+    
+    savingObject(){
+
+        let object = new ObjectController( );
+
+        const objectData = object.serialize();
+        
+
+
+        object.saveObject()
+            .then( response => {
+                alert(`Object saved`);
+            })
+            .catch( error => {
+                alert(`Object not saved ${error}`);
+            });
     }
 
 

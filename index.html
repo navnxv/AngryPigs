@@ -60,7 +60,7 @@
             <div>
                 <section id="game-object-list" class="flex-item info-form-area">
                     <ul>
-                        <li><div id="box-1" class="box strong-box" draggable="true"></div></li>
+                        <li><div id="strong-box" class="box strong-box" draggable="true"></div></li>
                         <li><div id="catapult" class="box catapult" draggable="true"></div></li>
                         <li><div id="bird" class="box bird" draggable="true"></div></li>
                     </ul>
@@ -69,29 +69,33 @@
                     Object Editor:
                     <form id = "level-info-area" class = "submission-form" accept-charset = "utf-8">
                         Name: <br>
-                        <select id="optionsObjects" ></select> <button id="load-btn-objects">Load Data </button><br>
+                        <!-- <input type = "text" name = "obj-name" value = "0" placeholder = "0"/><br /> -->
+                        <select id="objOptions" >
+                            
+                        </select><br />
+                        <button id="load-obj-btn">Load Data </button><br>
 
                         Value:<br>
                         <input type = "text" name = "obj-value" value = "0" placeholder = "0"/><br />
                         Height: <br>
-                        <input type="text" name="obj-height" value="1" /><br />
+                        <input type="text" name="obj-height" value="100" /><br />
                         Width:<br>
-                        <input type="text" name="obj-width" value="15" /><br />
+                        <input type="text" name="obj-width" value="100" /><br />
                         Texture:<br>
-                        <input type="text" name="obj-texture" value="my-background" /><br />
+                        <input type="text" name="obj-texture" value="texture" /><br />
                         Mass:<br>
                         <input type="text" name="obj-mass" value="1000" /><br />
                         Restitution:<br>
-                        <input type="text" name="obj-rest" value="10000" /><br />
+                        <input type="text" name="obj-rest" value="1000" /><br />
                         Friction:<br>
-                        <input type="text" name="obj-friction" value="50000" />
+                        <input type="text" name="obj-friction" value="100" /> <br />
                         Shape:<br>
-                        <input type="text" name="obj-shape" value="50000" />
+                        <input type="text" name="obj-shape" value="box" />
                         <br>
 
-                        <input type="submit" name="action" value="Submit" />
-                        <div id="save-level">
-                            <button class="button-flat" id = "save-btn">Save Level</div>
+                        <!-- <input type="submit" name="action" value="Submit" /> -->
+                        <div id="save-obj">
+                            <button class="button-flat" id = "save-obj-btn">Save Object</div>
                         </div>
                     </form>
                 </section>
