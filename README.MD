@@ -8,7 +8,8 @@ This project is a level editor for a angry pigs game and lets you add objects to
 
 ## Synopsis
 ---------------
-This is a try to make the level editor.
+This is a try to make the level editor. Saving and loading object works. saving data of the editor works
+
 
 
 
@@ -42,7 +43,5 @@ The list of saved files can be seen in the load level select column
 # *** Caveats *** (optional)
 ---------------------------------------
 
-editor load,
-catapult,
-new blocks
-
+Saving Levels (post is not saving the file properly.)
+Loading levels
