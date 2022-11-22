@@ -10,7 +10,7 @@ export default class LevelController {
         this.scene = new Scene( editor$ );
 
         //Serialize the scene
-        this.data = this.scene.serialize();
+        this.data = this.scene;
         
         console.log(this.data);
         

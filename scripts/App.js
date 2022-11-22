@@ -197,19 +197,6 @@ export default class App{
 
     }
 
-    saveData(data){
-        // $.post(`/api/save`, data)
-        //     .then(response =>{
-        //         //handle the response
-        //         console.log(response);
-        //         console.log(data);
-        //         const respData = JSON.parse(response);
-        //         if(respData.error)
-        //             console.log(`ERROR: ${respData} from the server`);
-        //             //console.log(respData);
-        //     });
-    }
-
     getLevelNames(){
         $.post("/api/levelList").then(data => {  
             data = data.payload; 
@@ -235,12 +222,6 @@ export default class App{
             });
         });    }
 
-    loadData(event){
-        event.preventDefault();
-        
-
-
-    }
 
     savingData(data){
         let level = new LevelController( data );
@@ -258,7 +239,7 @@ export default class App{
 
         let object = new ObjectController( );
 
-        const objectData = object.serialize();
+        
         
 
 

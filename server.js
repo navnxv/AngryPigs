@@ -66,11 +66,12 @@ class Server {
             // Pull apart the request, do something here...
             
             const body = request.body;
-            
+            //console.log(request);
+            console.log(body);
             const filename = body["name"];
             
-            const data = JSON.stringify(request.body);
-
+            const data = JSON.stringify(body);
+            console.log(this.data);
             console.log("./" + body["type"] + "s/" + filename + ".json");
             FileSystem.writeFile("./" + body["type"] + "s/" + filename + ".json", data , (err) => {
                 if(err){
@@ -88,7 +89,7 @@ class Server {
             const filename = body["name"];
             
 
-            
+            console.log(data);
             console.log("./" + body["type"] + "s/" + filename + ".json");
             FileSystem.writeFile("./" + body["type"] + "s/" + filename + ".json", data , (err) => {
                 if(err){
@@ -126,7 +127,6 @@ class Server {
                 "name" : filename,
                 "payload" : JSON.parse(data),
                 "error" : 0,
-            
 
             });
 

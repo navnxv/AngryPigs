@@ -1,1 +1,1 @@
-{"type":"object","name":"","value":"0","height":"10","width":"10","texture":"texture","mass":"1000","restitution":"1000","friction":"100","shape":"box"}
+{"type":"object","name":"","value":"0","height":"100","width":"100","texture":"texture","mass":"1000","restitution":"1000","friction":"100","shape":"box"}
