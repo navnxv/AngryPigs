@@ -47,6 +47,7 @@ export default class Scene{
                     wy : children[i].offsetTop,
                     height: children[i].offsetHeight,
                     width: children[i].offsetWidth,
+                    texture: "bird",
                     value: 100,
                 })
             }

@@ -27,9 +27,9 @@ export default class App{
         this.initDraggables();
         this.initDropzone();
         this.getUserNames();
-        this.getObjectNames();
         
-        this.getLevelNames();
+        $("#user-options").change(event => this.getLevelNames());
+        
         
         $(document).on("dragstart", event => {
             this.draggedObject = {
@@ -113,11 +113,25 @@ export default class App{
                 }
                 else if(classesArr[1] == "strong-box"){
                     newBox[0].id = "box-" + this.uniqueID;
-
+                }
+                else if(classesArr[1] == "catapult"){
+                    newBox[0].id = "catapult-" + this.uniqueID;
                 }
                 this.uniqueID++;
                 $("#edit-window").append( newBox );
             });
+
+        $("#del-window")
+            .on("dragover", event => {
+                //prevent the default ghosting issue
+                event.preventDefault();
+            })
+            .on("drop", event=>{
+                const delId = this.draggedObject.getId;
+                if(!(delId == "bird" || delId == "catapult" || delId == "strong-box"))
+                    $(`#${delId}`).remove();
+                 
+            })
     }
 
     onSave(event) {
@@ -136,8 +150,6 @@ export default class App{
         const editedObj =  "." + ($( `#objOptions`).val()).toLowerCase();
         $(editedObj).css("height", $("input[name = 'obj-height']").val());
         $(editedObj).css("width", $("input[name = 'obj-width']").val());
-
-        console.log("here");
         this.resetHeightWidth("#bird");
         this.resetHeightWidth("#box-1");
         this.resetHeightWidth("#catapult"); 
@@ -206,7 +218,14 @@ export default class App{
     }
 
     getLevelNames(){
-        $.post("/api/levelList").then(data => {  
+        $("#options").find("option").remove();
+
+        const username = $( `#user-options`).val();
+
+        const usrData = {
+            user : username,
+        }
+        $.post("/api/levelList",usrData).then(data => {  
             data = data.payload; 
             console.log("reached");
             data.forEach((file) => {
@@ -216,12 +235,14 @@ export default class App{
                 $("#options").append(option);
             });
         }); 
+        this.getObjectNames(usrData);
     }
 
-    getObjectNames(){
-        $.post("/api/objectList").then(data => {  
+    getObjectNames(usrData){
+        $("#objOptions").find("option").remove();
+
+        $.post("/api/objectList",usrData).then(data => {  
             data = data.payload; 
-            console.log("reached");
             data.forEach((file) => {
                 var option = document.createElement('option');
                 option.value = file.name; 

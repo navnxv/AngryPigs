@@ -66,8 +66,7 @@ class Server {
             // Pull apart the request, do something here...
             
             const body = request.body;
-            //console.log(request);
-            //console.log(body);
+            
             const filename = body["name"];
             
             const data = JSON.stringify(body);
@@ -77,7 +76,7 @@ class Server {
                 FileSystem.mkdirSync(`./data/${body["userid"]}`);
                 console.log("made");
             }
-            console.log(data);
+            //console.log(data);
             //console.log(`./${body["type"]}s/${filename}.json`);
             FileSystem.writeFile(`./data/${body["userid"]}/${body["type"]}s/${filename}.json`, data , (err) => {
                 if(err){
@@ -109,9 +108,8 @@ class Server {
 
 
         this.api.post(`/api/levelList`,(request, response) =>{
-            
             var payload = [];
-            FileSystem.readdir("./data/levels", (err, files) => {  
+            FileSystem.readdir(`./data/${request.body["user"]}/levels`, (err, files) => {  
                 files.forEach(file => {
                   payload.push({"name":file, "filename":file})     
                 });
@@ -153,7 +151,7 @@ class Server {
 
         this.api.post(`/api/objectList`, (request,response) => {
             var payload = [];
-            FileSystem.readdir("./objects", (err, files) => {  
+            FileSystem.readdir(`./data/${request.body["user"]}/objects`, (err, files) => {  
                 files.forEach(file => {
                   payload.push({"name":file.slice(0,-5), "filename":file})     
                 });

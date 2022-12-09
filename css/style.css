@@ -33,3 +33,10 @@ body{
     height: 100px;
     width: 100px;
 }
+
+.delete{
+    margin-top: 20px;
+    width:100%;
+    height:250px;
+    background-color: rgb(70, 64, 57);
+}
