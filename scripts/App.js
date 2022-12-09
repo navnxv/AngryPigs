@@ -26,9 +26,10 @@ export default class App{
 
         this.initDraggables();
         this.initDropzone();
-        this.getLevelNames();
+        this.getUserNames();
         this.getObjectNames();
-
+        
+        this.getLevelNames();
         
         $(document).on("dragstart", event => {
             this.draggedObject = {
@@ -172,13 +173,7 @@ export default class App{
             $( "input[name = 'obj-rest']" ).val(newData.restitution);
             $( "input[name = 'obj-friction']" ).val(newData.friction);
             $( "input[name = 'obj-shape']" ).val(newData.shape);
-
-            
-
-
-            
-                
-            });
+        });
      
     }
 
@@ -197,17 +192,30 @@ export default class App{
 
     }
 
-    getLevelNames(){
-        $.post("/api/levelList").then(data => {  
+    getUserNames(){
+        $.post("/api/userList").then(data => {  
             data = data.payload; 
             
             data.forEach((file) =>  {
                 var option = document.createElement('option');
                 option.value = file.name; 
                 option.innerHTML = file.name;
-                $("#options").append(option);
+                $("#user-options").append(option);
             });
         });
+    }
+
+    getLevelNames(){
+        $.post("/api/levelList").then(data => {  
+            data = data.payload; 
+            console.log("reached");
+            data.forEach((file) => {
+                var option = document.createElement('option');
+                option.value = file.name; 
+                option.innerHTML = file.name;
+                $("#options").append(option);
+            });
+        }); 
     }
 
     getObjectNames(){
@@ -220,7 +228,8 @@ export default class App{
                 option.innerHTML = file.name;
                 $("#objOptions").append(option);
             });
-        });    }
+        });    
+    }
 
 
     savingData(data){
@@ -237,12 +246,7 @@ export default class App{
     
     savingObject(){
 
-        let object = new ObjectController( );
-
-        
-        
-
-
+        let object = new ObjectController();
         object.saveObject()
             .then( response => {
                 alert(`Object saved`);

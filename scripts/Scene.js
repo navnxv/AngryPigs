@@ -3,14 +3,14 @@
 export default class Scene{
     constructor(editor$){
 
-    let entities = this.getEditorElements(editor$);
+    
 
 
         this.scene = {
             userid:"pg23navpreet",
             name:"nav",
             type:"level",
-            payload: entities,
+            payload: this.getEditorElements(editor$),
             
         }
         

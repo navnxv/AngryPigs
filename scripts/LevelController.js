@@ -10,26 +10,22 @@ export default class LevelController {
         this.scene = new Scene( editor$ );
 
         //Serialize the scene
-        this.data = this.scene;
+        this.data = this.scene.serialize();
         
-        console.log(this.data);
+        //console.log(this.data);
         
     }
 
     save() {
         return new Promise((resolve, reject) => {
-            //console.log(this.data);
-            $.post(`/api/save`, this.data)
-            .then(response => {
-                //handle the response
-                const respData = response;
-                console.log(respData);
-                if(response.error)
-                    console.log(`ERROR: ${respData} from the server`);
-                resolve(respData);
-            })
-            .catch( error => reject( error ));
+            console.log(this.data);
             
+            $.ajax({
+                type: "POST",
+                url: "/api/save",
+                data:this.data,
+                contentType:"application/json"
+            });
 
 
         });
