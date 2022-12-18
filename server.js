@@ -111,7 +111,7 @@ class Server {
             var payload = [];
             FileSystem.readdir(`./data/${request.body["user"]}/levels`, (err, files) => {  
                 files.forEach(file => {
-                  payload.push({"name":file, "filename":file})     
+                  payload.push({"name":file.slice(0,-5), "filename":file})     
                 });
                 
                 let data = { 
@@ -138,7 +138,7 @@ class Server {
               });                 
         });  
 
-        this.api.post(`/api/load`, (request, response) =>{
+        this.api.post(`/api/loadObj`, (request, response) =>{
             const filename = request.body["name"];
             console.log(filename);
             let data = FileSystem.readFileSync(`./${request.body["type"]}s/${filename}.json`);
@@ -161,7 +161,18 @@ class Server {
                 }
                 response.send(data);     
               });   
-        })
+        });
+
+
+        this.api.post(`/api/loadLevel`, (request,response) => {
+            const filename = request.body["name"];
+            let data = FileSystem.readFileSync(`./data/${request.body["user"]}/levels/${filename}.json`);
+            response.send({
+                "name" : filename,
+                "payload" : JSON.parse(data),
+                "error" : 0,
+            }); 
+        });
 
         this.api.set("port", PORT );
         this.listener = HTTP.createServer( this.api );

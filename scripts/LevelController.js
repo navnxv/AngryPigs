@@ -18,7 +18,6 @@ export default class LevelController {
 
     save() {
         return new Promise((resolve, reject) => {
-            console.log(this.data);
             
             $.ajax({
                 type: "POST",

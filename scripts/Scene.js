@@ -3,19 +3,22 @@
 export default class Scene{
     constructor(editor$){
 
-    
-
-
+        this.cannonOffsetX;
+        this.cannonOffsetY;
         this.scene = {
-            userid:"pg23navpreet",
-            name:"nav",
+            userid: $( "#user-options" ).val(),
+            name: $( "input[name = 'name']" ).val(),
             type:"level",
-            payload: this.getEditorElements(editor$),
-            
+            projectiles : $(`input[name = "projectiles"]`).val(),
+            background : $(`input[name = "background" ]`).val(),
+            oneStar: $(`input[name = "score-star1"]`).val(),
+            twoStar: $(`input[name = "score-star2"]`).val(),
+            threeStar: $(`input[name = "score-star3"]`).val(),
+            entities: this.getEditorElements(editor$),
+            cannon: {x: this.cannonOffsetX,
+                y: this.cannonOffsetY,
+            },
         }
-        
-        
-        //console.log(this.scene);
     }
 
     getEditorElements(editor$){
@@ -32,7 +35,7 @@ export default class Scene{
                     y : children[i].offsetTop,
                     height: children[i].offsetHeight,
                     width: children[i].offsetWidth,
-                    texture: "stone-box",
+                    texture: children[i].classList[1],
                     bounce: 0,
                     mass: 50,
                     friction: 1,
@@ -47,9 +50,14 @@ export default class Scene{
                     wy : children[i].offsetTop,
                     height: children[i].offsetHeight,
                     width: children[i].offsetWidth,
-                    texture: "bird",
+                    texture: children[i].classList[1],
                     value: 100,
                 })
+            }
+            else if(children[i].classList.contains("catapult")){
+                this.cannonOffsetX = children[i].offsetLeft;
+                this.cannonOffsetY = children[i].offsetTop;
+
             }
         }
 

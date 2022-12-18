@@ -1,1 +1,1 @@
-{"userid":"pg23navpreet","name":"nav","type":"level","payload":{"collidables":[{"id":"box-2","x":285,"y":323,"height":100,"width":100,"texture":"stone-box","bounce":0,"mass":50,"friction":1,"shape":"square"}],"targets":[{"id":"bird-4","wx":874,"wy":240,"height":100,"width":100,"value":100}]}}
+{"userid":"pg23navpreet","name":"nav","type":"level","payload":{"collidables":[],"targets":[]}}

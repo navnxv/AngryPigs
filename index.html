@@ -14,17 +14,13 @@
             <div>
                 <section id = "editor-form-section" class = "columns">
                     <form id = "level-info-area" class = "submission-form" accept-charset = "utf-8">
-                        <select id="user-options"></select><br/>
+                        <select id="user-options"><option></option></select><br/>
                         Name: <br>
                         <input type = "text" name = "name" value = "nav"><br>
-                        <select id="options" ></select> <button id="load-btn">Load Data </button><br>
+                        <select id="options" ><option></option></select> <button id="load-btn">Load Data </button><br>
 
-                        Obstacles:<br>
-                        <input type = "text" name = "obstacles" value = "0" placeholder = "0"/><br />
-                        Cannons: <br>
-                        <input type="text" name="cannons" value="1" /><br />
                         Max shots:<br>
-                        <input type="text" name="shots" value="15" /><br />
+                        <input type="text" name="projectiles" value="15" /><br />
                         Background:<br>
                         <input type="text" name="background" value="my-background" /><br />
                         One Star Score:<br>
@@ -62,9 +58,9 @@
             </div>
             <div>
                 <section id="game-object-list" class="flex-item info-form-area">
-                    <ul>
+                    <ul id = "objectList">
                         <li><div id="strong-box" class="box strong-box" draggable="true"></div></li>
-                        <li><div id="catapult" class="box catapult" draggable="true"></div></li>
+                        <li id = "catList"><div id="catapult" class="box catapult" draggable="true"></div></li>
                         <li><div id="bird" class="box bird" draggable="true"></div></li>
                     </ul>
                 </section>

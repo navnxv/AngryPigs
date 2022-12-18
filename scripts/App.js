@@ -16,11 +16,11 @@ export default class App{
             output$: $("#output")
         };
         my.output$ = $("#output");
-
+        this.editor$ = $("#edit-window");
         // connect a handler for the submit event on the form
         $( "input[name = 'action']" ).on("click", event => this.onSubmit( event ));
         $("#save-btn").on("click", event => this.onSave(event));
-        $("#load-btn").on("click", event => this.loadData(event));
+        $("#load-btn").on("click", event => this.onLevelLoad(event));
         $("#save-obj-btn").on("click", event => this.onSaveObj(event));
         $("#load-obj-btn").on("click", event => this.onLoadObj(event));
 
@@ -33,6 +33,7 @@ export default class App{
         
         $(document).on("dragstart", event => {
             this.draggedObject = {
+                getClass: event.target.classList,
                 getId : event.target.id,
                 x : event.offsetX,
                 y : event.offsetY,
@@ -79,27 +80,29 @@ export default class App{
                     return;
                 }
                 const xferData = event.originalEvent.dataTransfer.getData("text");
-                
                 if(xferData == ""){
-                    //console.log(event.currentTarget.lastChild.id);
                     
-                    console.log(this.getId);
+                    console.log(xferData);
                     $("#" + this.draggedObject.getId).css("top",event.offsetY - this.draggedObject.y);
                     $("#" + this.draggedObject.getId).css("left",event.offsetX - this.draggedObject.x);
+
                     return;
                 }
-
+                
                 const data = JSON.parse(xferData);
-                //const gameObjectSrc = $(`#${data.targetId}`).clone(true);
                 
                 let newBox = $(`#${data.targetId}`).clone(true);
 
-                //console.log(newBox);
                 let classList = newBox.attr("class");
                 let classesArr = classList.split(/\s+/);
 
+                // Check if catapult already exist
+                if($(`#edit-window`).has("#catapult-1").length && this.draggedObject.getClass.contains("catapult"))
+                    return;
+                
+
                 newBox = $("<div draggable='true'></div>");
-                $.each(classesArr, function(index, value){
+                $.each(classesArr, (index, value)=>{
                     newBox.addClass(value);
                 })
                 newBox.css("top",event.offsetY - data.y);
@@ -108,17 +111,21 @@ export default class App{
                 newBox.css("width", $("input[name = 'obj-width']").val());
 
                 newBox.addClass("placed");
+
                 if(classesArr[1] == "bird"){
                     newBox[0].id = "bird-" + this.uniqueID;
+
                 }
                 else if(classesArr[1] == "strong-box"){
                     newBox[0].id = "box-" + this.uniqueID;
                 }
                 else if(classesArr[1] == "catapult"){
-                    newBox[0].id = "catapult-" + this.uniqueID;
+                    newBox[0].id = "catapult-1";
                 }
+
                 this.uniqueID++;
                 $("#edit-window").append( newBox );
+                
             });
 
         $("#del-window")
@@ -128,17 +135,22 @@ export default class App{
             })
             .on("drop", event=>{
                 const delId = this.draggedObject.getId;
+
                 if(!(delId == "bird" || delId == "catapult" || delId == "strong-box"))
                     $(`#${delId}`).remove();
-                 
+                
+                if(this.draggedObject.getClass.contains("catapult")){
+                    if($(`#catList`).length == 0){
+                        $(`#objectList`).append(`<li id = "catList"><div id="catapult" class="box catapult" draggable="true"></div></li>`);
+                        $(`#catapult`).draggable('enable');
+                    }
+                }
             })
     }
 
     onSave(event) {
         //console.log(event);
         event.preventDefault();
-
-        this.editor$ = $("#edit-window");
         this.savingData(this.editor$);
     }
 
@@ -161,6 +173,7 @@ export default class App{
     }
 
 
+    // Loading Objects
     onLoadObj(event){
         event.preventDefault();
         const getClass = ($( `#objOptions`).val()).toLowerCase();
@@ -173,7 +186,7 @@ export default class App{
             type: "object"
         }
 
-        $.post("/api/load", (data))
+        $.post("/api/loadObj", (data))
         .then(data =>{
             const newData = data.payload; 
             
@@ -268,6 +281,7 @@ export default class App{
     savingObject(){
 
         let object = new ObjectController();
+        console.log("saving")
         object.saveObject()
             .then( response => {
                 alert(`Object saved`);
@@ -277,5 +291,74 @@ export default class App{
             });
     }
 
+    // Loading level on the load data button click
+    onLevelLoad(event){
+        event.preventDefault()
+    
+        let data = {
+            user : $(`#user-options`).val(),
+            name : $( `#options`).val(),
+            type: "level"
+        }
 
+        $.post("/api/loadLevel", data).then(data => {
+            const objects = data.payload;
+            
+            $( "input[name = 'projectiles']" ).val(objects.projectiles);
+            $( "input[name = 'background']" ).val(objects.background);
+            $( "input[name = 'score-star1']" ).val(objects.oneStar);
+            $( "input[name = 'score-star2']" ).val(objects.twoStar);
+            $( "input[name = 'score-star3']" ).val(objects.threeStar);
+
+            this.editor$.empty();
+
+            const collidables = objects.entities.collidables;
+            const targets = objects.entities.targets;
+
+            let newCatapult = $("<div draggable='true'></div>");
+            newCatapult.attr("id", "catapult-1");
+            newCatapult.css("top", objects.cannon.y);
+            newCatapult.css("left", objects.cannon.x);
+
+            newCatapult.addClass("box");
+            newCatapult.addClass("catapult");
+            newCatapult.addClass("placed");
+
+            this.editor$.append(newCatapult);
+
+            // Adding collidables to the editor
+            $.each(collidables, (index, value)=>{
+
+                let newCollidable = $("<div draggable='true'></div>");
+                newCollidable.attr("id", value.id);
+                newCollidable.css("height", value.height);
+                newCollidable.css("width", value.width);
+                newCollidable.css("top",value.y);
+                newCollidable.css("left", value.x);
+
+                newCollidable.addClass("box");
+                newCollidable.addClass(value.texture);
+                newCollidable.addClass("placed");
+
+                this.editor$.append(newCollidable);
+            });
+
+            $.each(targets, (index, value)=>{
+
+                let newCollidable = $("<div draggable='true'></div>");
+                newCollidable.attr("id", value.id);
+                newCollidable.css("height", value.height);
+                newCollidable.css("width", value.width);
+                newCollidable.css("top",value.wy);
+                newCollidable.css("left", value.wx);
+
+                newCollidable.addClass("box");
+                newCollidable.addClass(value.texture);
+                newCollidable.addClass("placed");
+
+                this.editor$.append(newCollidable);
+            });
+
+        });
+    }
 }
