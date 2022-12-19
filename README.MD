@@ -8,7 +8,7 @@ This project is a level editor for a angry pigs game and lets you add objects to
 
 ## Synopsis
 ---------------
-This is a try to make the level editor. Saving and loading object works. saving data of the editor works
+This project is a complete level editor for AngryPigs game without the physics
 
 
 
@@ -29,7 +29,10 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # Download/Install
 ---------------------------------------
 Download the project from https://github.com/pg23navpreet/AngryPigs
-Assuming the user has all the moduels installed, run node server.js
+Assuming the user has all the moduels installed, 
+1. Run command `npm install` in terminal. This will install all the required moduels
+2. Run `node server.js` or `npm run server`
+3. Open your browser and type localhost:4000 in the url
 
 
 # *** How to use ***
@@ -37,11 +40,11 @@ Assuming the user has all the moduels installed, run node server.js
 You can drag and drop the objects from the right hand side to the editor window
 You can also create new level with the data and save it to the remote server 
 The list of saved files can be seen in the load level select column
+Save and load objects and data to the editor :)
 
 
 
 # *** Caveats *** (optional)
 ---------------------------------------
 
-Saving Levels (post is not saving the file properly.)
-Loading levels
+I did not have access to the physics.js file I was planning on working on it this weekend (17,18 dec). Since moodle was inaccessible and campus is closed, I was not able to work on the physics part of the assignment. 
